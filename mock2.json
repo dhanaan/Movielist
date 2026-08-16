@@ -1,0 +1,443 @@
+{
+  "page": 1,
+  "results": [
+    {
+      "adult": false,
+      "backdrop_path": "/cHII6sQ91q8H5EMONKCwCQMauCP.jpg",
+      "genre_ids": [
+        16,
+        35,
+        18,
+        9648
+      ],
+      "id": 46195,
+      "origin_country": [
+        "JP"
+      ],
+      "original_language": "ja",
+      "original_name": "\u5316\u7269\u8a9e",
+      "overview": "Koyomi Araragi, a high school student, finds himself constantly encountering girls afflicted by supernatural \"oddities.\" He dedicates himself to helping them, often with the aid of the eccentric specialist Meme Oshino. Each arc talks about a different girl's unique struggle and the mysterious cause of their affliction. The series explores themes of adolescence, personal growth, and the complexities of human relationships. It's known for its witty dialogue, stylistic animation, and unique narrative structure.",
+      "popularity": 44.2082,
+      "poster_path": "/zCEjjb1NH3LLsWeZx47wOeqkezf.jpg",
+      "first_air_date": "2009-07-03",
+      "softcore": false,
+      "name": "Monogatari",
+      "vote_average": 8.091,
+      "vote_count": 527
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/52KuG01xVqBPgM54sdRFxpe29nX.jpg",
+      "genre_ids": [
+        16,
+        10765,
+        10759
+      ],
+      "id": 23791,
+      "origin_country": [
+        "JP"
+      ],
+      "original_language": "ja",
+      "original_name": "\u30dd\u30dd\u30ed\u30af\u30ed\u30a4\u30b9\u7269\u8a9e",
+      "overview": "Prince Pietro is the half-human, half-dragon prince of the kingdom of Popolocrois. After the evil GamiGami tries to take over the Kingdom, a mysterious girl named Hyuu appears in the forest near Popolocrois Castle, which is the beginning of an adventure for Pietro, his witch friend Narcia, and all their friends.",
+      "popularity": 8.2334,
+      "poster_path": "/n6p4vlE2mh4zRVt3DJjcrLfRScx.jpg",
+      "first_air_date": "1998-10-04",
+      "softcore": false,
+      "name": "Popolocrois Monogatari",
+      "vote_average": 5.0,
+      "vote_count": 4
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/1XWKaMFq7xGC6SRYIJUkwf0Gp25.jpg",
+      "genre_ids": [
+        9648,
+        10765
+      ],
+      "id": 225920,
+      "origin_country": [
+        "JP"
+      ],
+      "original_language": "ja",
+      "original_name": "\u4e16\u306b\u3082\u5947\u5999\u306a\u7269\u8a9e\u7279\u5225\u7de8",
+      "overview": "",
+      "popularity": 15.4932,
+      "poster_path": "/kUMRtW0Db4K5LrjU8JhXwgCNqju.jpg",
+      "first_air_date": "1990-10-04",
+      "softcore": false,
+      "name": "Yonimo Kimyou na Monogatari Tokubetsuhen",
+      "vote_average": 9.5,
+      "vote_count": 2
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/iVqDHEb5wkIl86lUgU9SB7Zg8KK.jpg",
+      "genre_ids": [
+        16,
+        18
+      ],
+      "id": 22974,
+      "origin_country": [
+        "JP"
+      ],
+      "original_language": "ja",
+      "original_name": "\u3046\u307f\u3082\u306e\u304c\u305f\u308a \uff5e\u3042\u306a\u305f\u304c\u3044\u3066\u304f\u308c\u305f\u30b3\u30c8\uff5e",
+      "overview": "Marin and Urin are sea folk, people who live in a peaceful underwater world surrounded by bright fish and colorful coral. But one day, a beautiful ring falls from the \"sky\" - that dangerous place above the water - and the two girls decide to return the lovely trinket to its owner.\n\nWhile the surface world holds amazing wonders for the pair, it also hides a great darkness... a darkness that Urin accidentally unleashes when she opens a stone box at a local shrine. Now it's up to Marin, Urin, and their new friend Kanon to set things right again before that darkness swallows the entire world!",
+      "popularity": 4.7106,
+      "poster_path": "/77c1TnNUMCGnHz9ZIApCmgoeQ3R.jpg",
+      "first_air_date": "2009-06-25",
+      "softcore": false,
+      "name": "Umi Monogatari",
+      "vote_average": 4.571,
+      "vote_count": 7
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/6oQrxarMREd4z5v72enEaMk9Blm.jpg",
+      "genre_ids": [
+        18
+      ],
+      "id": 117959,
+      "origin_country": [
+        "JP"
+      ],
+      "original_language": "ja",
+      "original_name": "\u56fd\u76d7\u308a\u7269\u8a9e",
+      "overview": "Set in Japan several centuries back. It depicts the struggles of three historical warriors, Dosan Saito, Nobunaga Oda and Mitsuhide Akechi.",
+      "popularity": 2.9421,
+      "poster_path": "/1tiHPghujFUTrz63t9S9por24bl.jpg",
+      "first_air_date": "1973-01-07",
+      "softcore": false,
+      "name": "Kunitori Monogatari",
+      "vote_average": 0.0,
+      "vote_count": 0
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/ue0wnuGyl1W3ydYAZRuXWuk1qu6.jpg",
+      "genre_ids": [
+        16,
+        18
+      ],
+      "id": 23021,
+      "origin_country": [
+        "JP"
+      ],
+      "original_language": "ja",
+      "original_name": "\u5b50\u9e7f\u7269\u8a9e THE YEARLING",
+      "overview": "",
+      "popularity": 4.4664,
+      "poster_path": "/1S8ATfw5iJh1ZVjWiA1BBxfZDJj.jpg",
+      "first_air_date": "1983-11-08",
+      "softcore": false,
+      "name": "Kojika Monogatari",
+      "vote_average": 9.0,
+      "vote_count": 1
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/3zbDX1niS6sRvcLYCqRVDKgPenz.jpg",
+      "genre_ids": [
+        16,
+        35,
+        18,
+        10751
+      ],
+      "id": 44577,
+      "origin_country": [
+        "JP"
+      ],
+      "original_language": "ja",
+      "original_name": "\u30c6\u30ec\u30d3\u307e\u3093\u304c \u662d\u548c\u7269\u8a9e",
+      "overview": "Sh\u014dwa Monogatari is a 2011 Japanese anime film and television series about the Yamazaki family, who live in Tokyo during Sh\u014dwa 39, the same year Tokyo hosts the 1964 Summer Olympics. The film, directed by Tadahiro Murakami, was released in Japan on January 29, 2011. Hiroshi Kugimiya directed the 13-episode television series, which had its broadcast run between April and July 2011",
+      "popularity": 4.5356,
+      "poster_path": "/7T6XT9536fSeWJrVThamLwJOymq.jpg",
+      "first_air_date": "2011-04-04",
+      "softcore": false,
+      "name": "Showa Monogatari",
+      "vote_average": 8.5,
+      "vote_count": 4
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/5cHNjixcHXjlff0cbdHOvhxsY7I.jpg",
+      "genre_ids": [
+        18
+      ],
+      "id": 84765,
+      "origin_country": [
+        "JP"
+      ],
+      "original_language": "ja",
+      "original_name": "\u5ea7\u982d\u5e02\u7269\u8a9e",
+      "overview": "Blind masseur Zat\u00f4ichi travels from town to town gambling, drinking, and fighting off the local gangs.",
+      "popularity": 5.8307,
+      "poster_path": "/3arVXKAQRVTUpV8rpI4RHFoHSTC.jpg",
+      "first_air_date": "1974-10-03",
+      "softcore": false,
+      "name": "Zatoichi Monogatari",
+      "vote_average": 8.2,
+      "vote_count": 5
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/fKezHDdH7HTAEJsKNxLrJgu77ng.jpg",
+      "genre_ids": [
+        16,
+        10762
+      ],
+      "id": 44376,
+      "origin_country": [
+        "JP"
+      ],
+      "original_language": "ja",
+      "original_name": "\u30a2\u30f3\u30c7\u30eb\u30bb\u30f3\u7269\u8a9e",
+      "overview": "Hans Christian Andersen Stories is a Japanese anime series by Mushi Productions and aired on Fuji TV from January 3 to December 21, 1971.",
+      "popularity": 3.4347,
+      "poster_path": "/1dD1pFbuRrRwE8VvunOdoQULL7N.jpg",
+      "first_air_date": "1971-01-03",
+      "softcore": false,
+      "name": "Andersen Monogatari",
+      "vote_average": 6.5,
+      "vote_count": 2
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/p2of6CboU9gFjj4xfPq0GE0HqTy.jpg",
+      "genre_ids": [
+        18
+      ],
+      "id": 109478,
+      "origin_country": [
+        "JP"
+      ],
+      "original_language": "ja",
+      "original_name": "\u7537\u59737\u4eba\u590f\u7269\u8a9e",
+      "overview": "He brought together the Akashi family and Shinobu Otake, who later married (Imalu was born, then divorced). The fun of the interaction between Sanma and Otake became a hot topic, with a peak viewership of over 31%, and a sequel \"The Story of Seven Men and Women in Autumn\" was produced. It is also said to be the originator of trendy drama.",
+      "popularity": 2.024,
+      "poster_path": "/2j11SIYSKYqUb9Z9wrsSiNIt8i.jpg",
+      "first_air_date": "1986-07-25",
+      "softcore": false,
+      "name": "Danjoshichi Natsu Monogatari",
+      "vote_average": 9.0,
+      "vote_count": 1
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/zO1dI6ZW1KRIsi4gmwkhXRQWLOU.jpg",
+      "genre_ids": [
+        16,
+        10762
+      ],
+      "id": 204833,
+      "origin_country": [
+        "JP"
+      ],
+      "original_language": "ja",
+      "original_name": "\u307e\u3093\u304c\u306f\u3058\u3081\u3066\u7269\u8a9e",
+      "overview": "",
+      "popularity": 3.8174,
+      "poster_path": "/unGVjYNOaYXOXwAa9O3ibc2x8pZ.jpg",
+      "first_air_date": "1978-05-06",
+      "softcore": false,
+      "name": "Manga Hajimete Monogatari",
+      "vote_average": 0.0,
+      "vote_count": 0
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/sPGl9RqQh7fpxUvV64hj64beWQ9.jpg",
+      "genre_ids": [
+        18
+      ],
+      "id": 117999,
+      "origin_country": [
+        "JP"
+      ],
+      "original_language": "ja",
+      "original_name": "\u65b0\u30fb\u5e73\u5bb6\u7269\u8a9e",
+      "overview": "Set at the end of the 12th century when several wars for control of Japan disrupted a long era of peace, this tale of \"Heike\" (another name for the Taira clan) focuses on Taira Kiyomori who fights alongside other members of his clan to at first successfully overcome the Minamoto clan and their bid for power. Battles and intrigue abound, as the puppet Emperor and Buddhist monks take sides in the power struggle. At issue is Kiyomori's parentage, not an unusual problem for the nobility in that era where clandestine liaisons among courtiers and the upper classes were common.",
+      "popularity": 3.3177,
+      "poster_path": "/cQ3vTkhQUEosz0zrV2ZxH7JFR9q.jpg",
+      "first_air_date": "1972-01-02",
+      "softcore": false,
+      "name": "Shin Heike Monogatari",
+      "vote_average": 7.333,
+      "vote_count": 3
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/kZRZPsvFwYVHgYKzQWi18kOF4G.jpg",
+      "genre_ids": [
+        16,
+        35
+      ],
+      "id": 92365,
+      "origin_country": [
+        "CN",
+        "JP"
+      ],
+      "original_language": "ja",
+      "original_name": "\u9670\u967d\u5e2b\u30fb\u5e73\u5b89\u7269\u8a9e",
+      "overview": "",
+      "popularity": 5.634,
+      "poster_path": "/s7sEbiKWXvoUCpoQBV1EHecLhPf.jpg",
+      "first_air_date": "2018-07-04",
+      "softcore": false,
+      "name": "Onmyouji: Heian Monogatari",
+      "vote_average": 10.0,
+      "vote_count": 1
+    },
+    {
+      "adult": false,
+      "backdrop_path": null,
+      "genre_ids": [],
+      "id": 302515,
+      "origin_country": [
+        "US"
+      ],
+      "original_language": "en",
+      "original_name": "Isekai Harem Monogatari",
+      "overview": "A 16-year-old named Naoki Oikawa is addicted to masturbating. One day, while pleasuring himself as usual, his erotic magazine begins to glow and Naoki suddenly finds himself in a fantastic world. He appears among three female adventurers who later present themselves as the swordswoman Filia Shiora, the priestess Tiane Rutheim, and the elf Llusse. They explain to Naoki that the world is in danger of destruction due to the resurrection of the Demon King, and the only way to save it is for him to use his special power\u2014feeding his semen to the three girls so as to increase their strength exponentially. Of course, the young hero agrees to join the party, and his erotic quest begins.",
+      "popularity": 0.5059,
+      "poster_path": null,
+      "first_air_date": "2020-07-31",
+      "softcore": false,
+      "name": "Isekai Harem Monogatari",
+      "vote_average": 0.0,
+      "vote_count": 0
+    },
+    {
+      "adult": false,
+      "backdrop_path": null,
+      "genre_ids": [
+        18
+      ],
+      "id": 273700,
+      "origin_country": [
+        "JP"
+      ],
+      "original_language": "ja",
+      "original_name": "\u5e73\u6210\u7269\u8a9e",
+      "overview": "A story spanning 30 years, following a man born in the first year of the Heisei era, and his life until the era's end, intertwined with the music that defined the times.\n\nThe protagonist is a plain man named Heisei (Hiranari). He grows up in a family of four in the countryside, with a hobby of playing guitar. He moves to Tokyo for university, aiming to become a band musician, but life doesn't go so smoothly. His love life also gets complicated, torn between Yui, a childhood friend from his hometown, and Tsumugi, a woman he meets in Tokyo. As his band activities take an unexpected turn, Heisei is faced with life-altering decisions.\n\nNow, at 30 years old, what reality lies before Heisei (Hiranari)? And what kind of answer will he come up with for himself?",
+      "popularity": 0.9762,
+      "poster_path": "/tf4yv63uwv2CqmRCxl2wxJmL75I.jpg",
+      "first_air_date": "2019-03-18",
+      "softcore": false,
+      "name": "Heisei Monogatari",
+      "vote_average": 0.0,
+      "vote_count": 0
+    },
+    {
+      "adult": false,
+      "backdrop_path": null,
+      "genre_ids": [
+        35,
+        16
+      ],
+      "id": 36207,
+      "origin_country": [
+        "JP"
+      ],
+      "original_language": "ja",
+      "original_name": "\u6771\u4eac\u5927\u5b66\u7269\u8a9e",
+      "overview": "Murakami Naoki is the most intelligent student at his high school, but he can't stop obsessing over a girl named Mizuno Haruka. He finally asks her out, and to his surprise, she accepts. After several months of a loving yet obviously doomed romance, it comes time for them to take the entrance exams for Tokyo University. But what would happen to their relationship if only one of them was accepted.",
+      "popularity": 1.9204,
+      "poster_path": "/dK6E8IcSsrQgGA0FklDajcDqsGj.jpg",
+      "first_air_date": "2004-12-10",
+      "softcore": false,
+      "name": "Tokyo Daigaku Monogatari",
+      "vote_average": 5.2,
+      "vote_count": 4
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/59XDMPidqsStacMs0DsH7DJ18nj.jpg",
+      "genre_ids": [
+        18
+      ],
+      "id": 111303,
+      "origin_country": [],
+      "original_language": "ja",
+      "original_name": "\u7d14\u70c8\u3082\u306e\u304c\u305f\u308a",
+      "overview": "A documentary drama featuring Junretsu.",
+      "popularity": 0.8581,
+      "poster_path": "/fG6A5ja2xFnmOpDLV1f2syfWgu8.jpg",
+      "first_air_date": "2021-07-01",
+      "softcore": false,
+      "name": "Junretsu Monogatari",
+      "vote_average": 0.0,
+      "vote_count": 0
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/gdfmPb6iNJ9iC3w0ifX9iRSqMgL.jpg",
+      "genre_ids": [
+        9648,
+        18
+      ],
+      "id": 273173,
+      "origin_country": [
+        "JP"
+      ],
+      "original_language": "ja",
+      "original_name": "\u53e4\u66f8\u5802\u3082\u306e\u304c\u305f\u308a",
+      "overview": "Set in a certain old bookstore, when the girls who visit there start reading a mystery novel recommended by the store owner, they travel back in time to the world of the novel, where the brutality unfolds. It also depicts the growth of a girl who finds answers to the troubles and conflicts that girls have in the real world by interacting with people they meet in the world of novels that have slipped back in time.",
+      "popularity": 2.7155,
+      "poster_path": "/nhtsILpTP8oFoBj71qKdNHVGvx7.jpg",
+      "first_air_date": "2023-04-12",
+      "softcore": false,
+      "name": "Koshodo Monogatari",
+      "vote_average": 0.0,
+      "vote_count": 0
+    },
+    {
+      "adult": false,
+      "backdrop_path": null,
+      "genre_ids": [
+        35,
+        18
+      ],
+      "id": 135849,
+      "origin_country": [
+        "JP"
+      ],
+      "original_language": "ja",
+      "original_name": "\u6771\u4eac\u5927\u5b66\u7269\u8a9e",
+      "overview": "Naoki is smart, handsome and athletic. His friend Sano takes him to watch a tennis game where he falls in love at first sight with Haruka. He asks her out. They get to know each other while trying to balance their studies.",
+      "popularity": 1.7371,
+      "poster_path": "/yUC33JocA8Ox2FU8GAScfjkVr9n.jpg",
+      "first_air_date": "1994-10-10",
+      "softcore": false,
+      "name": "Tokyo Daigaku Monogatari",
+      "vote_average": 6.0,
+      "vote_count": 1
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/5cSJboo9vsEtorH6diXNZ36RorN.jpg",
+      "genre_ids": [
+        16,
+        10759,
+        9648
+      ],
+      "id": 95049,
+      "origin_country": [
+        "JP"
+      ],
+      "original_language": "ja",
+      "original_name": "\u9670\u967d\u767e\u9b3c\u7269\u8a9e",
+      "overview": "In a time when demons and humans coexisted... Evil spirits from the underworld have begun a quest for power, strength, and dominance. The balance between the two worlds is now in jeopardy. Fortunately, there's a group of gifted humans who can read the stars and draw amulets. They have the power to connect the two worlds, and even tame the spirits. They are willing to lay everything on the line to maintain peace and order between the two worlds. They are known as Onmyouji.",
+      "popularity": 0.9646,
+      "poster_path": "/lkRPQaTaM3L3cKdhsey671cTT83.jpg",
+      "first_air_date": "",
+      "softcore": false,
+      "name": "Onmiyou Hyakki Monogatari",
+      "vote_average": 0.0,
+      "vote_count": 0
+    }
+  ],
+  "total_pages": 6,
+  "total_results": 119
+}
