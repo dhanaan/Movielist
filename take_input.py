@@ -1,14 +1,3 @@
-def check_type(usr_input, allow_type):
-    if allow_type is str:
-        return usr_input
-    
-    try:
-        return allow_type(usr_input)
-    except (ValueError, TypeError):
-        print(f'Invalid, {usr_input} is not a valid {allow_type.__name__}')
-        return None
-
-    
 def take_input(text = "", allow_type = str, case_sensitive = True, choices = None, rule = lambda x: True, rule_error = "Rule violated"):
     '''
     input() module with extended capabilities like type checking, 
@@ -45,3 +34,15 @@ def take_input(text = "", allow_type = str, case_sensitive = True, choices = Non
         else:
             print(f'Invalid, please choose between ({", ".join(choices)})')
             continue
+
+def check_type(usr_input, allow_type):
+    if allow_type is str:
+        return usr_input
+    
+    try:
+        return allow_type(usr_input)
+    except (ValueError, TypeError):
+        print(f'Invalid, {usr_input} is not a valid {allow_type.__name__}')
+        return None
+
+    

@@ -17,3 +17,10 @@ class TMDBClient:
         response = requests.get(url, headers=self.headers, params=params)
         response.raise_for_status()
         return response.json()
+
+    def genre(self, query_type: str):
+        url = f"{self.BASE_URL}/genre/{query_type}/list"
+        params = {"language": "en-US"}
+        response = requests.get(url, headers=self.headers, params=params)
+        response.raise_for_status()
+        return response.json()
