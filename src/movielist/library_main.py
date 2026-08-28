@@ -1,6 +1,13 @@
 from dataclasses import dataclass, field
 import json
 
+def autosave(func):
+    def wrapper(self, *args, **kwargs):
+        result = func(self, *args, **kwargs)
+        self.write()
+        return result
+    return wrapper
+
 @dataclass
 class Library:
     json_path: str = "library.json"
@@ -37,20 +44,18 @@ class Library:
         if find is not None:
             return self.library_data[find]['is_watched']
         return None
-        
+
+    @autosave
     def add_item(self, item):
         self.library_data.append(item)
         self.library_data[-1]['is_watched'] = False
-        self.write()
 
+    @autosave
     def remove_item(self, index):
         self.library_data.pop(index)
-        self.write()
 
+    @autosave
     def change_is_watched(self, index):
-        if self.library_data[index]["is_watched"] == True:
-            self.library_data[index]["is_watched"] = False
-        else:
-            self.library_data[index]["is_watched"] = True
-        self.write()
+        watched = self.library_data[index]["is_watched"]
+        self.library_data[index]["is_watched"] = not watched
 

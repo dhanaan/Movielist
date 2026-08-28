@@ -2,7 +2,7 @@ import json
 import requests
 import os
 from dotenv import load_dotenv
-from tmdb import TMDBClient
+from movielist.tmdb import TMDBClient
 load_dotenv()
 
 # run this script to get a fresh genre.json list

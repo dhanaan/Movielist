@@ -1,12 +1,12 @@
 import os
 from dotenv import load_dotenv
-from take_input import take_input
-from tmdb import TMDBClient
+from movielist.input_ext import take_input
+from movielist.tmdb import TMDBClient
 import subprocess
 import webbrowser
 import time
 import json
-from library_main import Library 
+from movielist.library_main import Library 
 load_dotenv()
 
 class App:
@@ -14,6 +14,7 @@ class App:
         self.client = TMDBClient(os.getenv("TMDB_API_KEY"))
         self.library = Library()
         self.genre_list = {}
+
 
     def show_details(self, title, original_title, overview, rating, genre, release_date, poster_path, id, item):
         while True:
@@ -26,7 +27,7 @@ class App:
             self.library.read()
             is_watched = self.library.is_watched(id)
             if is_watched is not None:
-                print(f'In library | {'👁  Watched' if is_watched else '👁  Not Watched'}')
+                print(f"In library | {'👁  Watched' if is_watched else '👁  Not Watched'}")
             else:
                 print("Not in library")
 
