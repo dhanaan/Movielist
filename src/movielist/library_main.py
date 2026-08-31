@@ -1,7 +1,13 @@
 from dataclasses import dataclass, field
+from platformdirs import user_data_path
 import json
 
-def autosave(func):
+def default_library_path() -> str:
+    data_dir = user_data_path("Movielist")
+    data_dir.mkdir(parents=True, exist_ok=True)
+    return f'{data_dir}/library.json'
+
+def autosave(func) -> function:
     def wrapper(self, *args, **kwargs):
         result = func(self, *args, **kwargs)
         self.write()
@@ -10,7 +16,7 @@ def autosave(func):
 
 @dataclass
 class Library:
-    json_path: str = "library.json"
+    json_path: str = field(default_factory=default_library_path)
     library_data: list = field(default_factory=list)
 
     def write(self):
@@ -37,7 +43,7 @@ class Library:
         return len(self.library_data)
           
     def get_data(self, index):
-        return self.library_data[index]
+        return self.library_data.get(index)
         
     def is_watched(self, id):
         find = self.library_index(id)

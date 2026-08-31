@@ -1,3 +1,5 @@
+import sys
+
 def take_input(text: str = "", allow_type: type = str, case_sensitive: bool = False,
           choices = None, rule = lambda x: True, rule_error: str = "rule violated"):
     '''
@@ -6,7 +8,11 @@ def take_input(text: str = "", allow_type: type = str, case_sensitive: bool = Fa
     '''
 
     while True:
-        usr = input(text)
+        try:
+            usr = input(text)
+        except KeyboardInterrupt:
+            print("Goodbye")
+            sys.exit()
 
         # type convert
         usr_converted = _change_type(usr, allow_type)
@@ -58,6 +64,7 @@ def _change_type(usr, allow_type):
         return usr
     try:
         return allow_type(usr)
+    
     except (ValueError, TypeError):
         print(f'Invalid, {usr} is not a valid {allow_type.__name__}')
         return None
