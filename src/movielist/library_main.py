@@ -13,7 +13,9 @@ class Library:
         self.json_path: str = json_path
 
     def read(self):
-        self.library_data = storage.read(self.json_path)
+        result = storage.read(self.json_path)
+        if result is not None:
+            self.library_data = result
 
     def library_index(self, id):
         for i, item in enumerate(self.library_data):
