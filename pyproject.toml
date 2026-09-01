@@ -5,8 +5,6 @@ description = "lightweight CLI tool to search movies/tv-series"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-    "dotenv>=0.9.9",
-    "platformdirs>=4.11.5",
     "pytest>=9.1.1",
     "requests>=2.34.2",
 ]
