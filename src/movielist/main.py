@@ -133,11 +133,10 @@ class App:
 
     def authenticate(self):
         valid = self.client.authentication().get("success")
-
+        print("Welcome to Movielist!")
+        print("For info about this step, check out https://youtube.com")
         while not valid:
-            print("Welcome to Movielist!")
-            print("For info about this step, check out https://youtube.com")
-            self.API = take_input("Enter TMDB API key: ")
+            self.API = take_input("Enter TMDB API Read Access Token: ")
             self.client = TMDBClient(self.API)
             result = self.client.authentication()
             valid = result.get("success")
@@ -166,6 +165,7 @@ class App:
 
 def main():
     app = App()
+    app.authenticate()
     app.start()
 
 if __name__ == "__main__":
