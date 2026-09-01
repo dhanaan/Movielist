@@ -15,10 +15,10 @@ def load_genres(json_path: str, Client: TMDBClient):
         full_genre = {}
 
         for res in tv_result:
-            full_genre[res["id"]] = res["name"]
+            full_genre[str(res["id"])] = res["name"]
 
         for res in movie_result:
-            full_genre[res["id"]] = res["name"]
+            full_genre[str(res["id"])] = res["name"]
 
         storage.write(json_path, full_genre)
         return full_genre
