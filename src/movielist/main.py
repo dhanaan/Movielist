@@ -1,20 +1,20 @@
-import os
-from dotenv import load_dotenv
+import webbrowser, time
 from movielist.input_ext import take_input
 from movielist.tmdb import TMDBClient
-import webbrowser
-import time
 from movielist.library_main import Library
-from movielist.utils import clear
-import movielist.genres as genres
-
-load_dotenv()
+from movielist.utils import clear, load_genres
+import movielist.storage as storage
+import sys
 
 class App:
     def __init__(self):
-        self.client = TMDBClient(os.getenv("TMDB_API_KEY"))
+        self.API = storage.read("api.json")
+        self.client = TMDBClient(self.API)
+
+    def setup(self):
         self.library = Library(json_path="library.json")
-        self.genre_list = genres.ALL
+        self.genre_list = load_genres("genres.json", self.client)
+
 
     def show_details(self, title, original_title, overview, rating, genre, release_date, poster_path, id, item):
         while True:
@@ -24,7 +24,6 @@ class App:
             print("--------------")
             print(overview or "No description.")
             print("--------------")
-            self.library.read()
             is_watched = self.library.is_watched(id)
             if is_watched is not None:
                 print(f"In library | {'👁  Watched' if is_watched else '👁  Not Watched'}")
@@ -132,7 +131,24 @@ class App:
                     self.show_details(title= item['title' if is_a_movie else 'name'], original_title=item['original_title' if is_a_movie else 'original_name'], overview=item['overview'], rating=item['vote_average'], genre=item['genre_ids'], release_date= item['release_date' if is_a_movie else 'first_air_date'], poster_path= item['poster_path'], id=item['id'], item=item)
 
 
+    def authenticate(self):
+        valid = self.client.authentication().get("success")
+
+        while not valid:
+            print("Welcome to Movielist!")
+            print("For info about this step, check out https://youtube.com")
+            self.API = take_input("Enter TMDB API key: ")
+            self.client = TMDBClient(self.API)
+            result = self.client.authentication()
+            valid = result.get("success")
+            if not valid:
+                print(result.get("status_message"))
+            else:
+                storage.write("api.json", self.API)
+            print()
+            
     def start(self):
+        self.setup()
         while True:
             clear()
             print("Welcome to Movielist!")
@@ -142,7 +158,7 @@ class App:
             usr = take_input("$ ", choices=['q', 'l', 's'])
             match usr:
                 case 'q':
-                    break
+                    sys.exit()
                 case 'l':
                     self.see_library()
                 case 's':

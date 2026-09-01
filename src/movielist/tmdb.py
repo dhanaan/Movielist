@@ -9,6 +9,11 @@ class TMDBClient:
             "accept": "application/json",
             "Authorization": f"Bearer {self.access_token}"
         }
+
+    def authentication(self):
+        url = f"{self.base_url}/authentication"
+        response = requests.get(url, headers=self.headers)
+        return response.json()
     
     def search(self, query: str, query_type="movie", page: int = 1):
         url = f"{self.base_url}/search/{query_type}"

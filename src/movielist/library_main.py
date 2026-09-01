@@ -1,37 +1,19 @@
-from dataclasses import dataclass, field
-from platformdirs import user_data_path
-import json
-
-def default_library_path() -> str:
-    data_dir = user_data_path("Movielist")
-    data_dir.mkdir(parents=True, exist_ok=True)
-    return f'{data_dir}/library.json'
+import movielist.storage as storage
 
 def autosave(func) -> function:
     def wrapper(self, *args, **kwargs):
         result = func(self, *args, **kwargs)
-        self.write()
+        storage.write(self.json_path, self.library_data)
         return result
     return wrapper
 
-@dataclass
 class Library:
-    json_path: str = field(default_factory=default_library_path)
-    library_data: list = field(default_factory=list)
-
-    def write(self):
-        with open(self.json_path, 'w') as file:
-            json.dump(self.library_data, file)
+    def __init__(self, json_path):
+        self.library_data: list = list([])
+        self.json_path: str = json_path
 
     def read(self):
-        try:
-            with open(self.json_path, 'r') as file:
-                self.library_data = json.load(file)
-        except json.JSONDecodeError:
-            self.library_data = []
-        except FileNotFoundError:
-            self.write()
-            
+        self.library_data = storage.read(self.json_path)
 
     def library_index(self, id):
         for i, item in enumerate(self.library_data):
