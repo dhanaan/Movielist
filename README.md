@@ -53,7 +53,7 @@ uv run movielist
 
 ## Roadmap
 
-- [ ] **Handle HTTP errors gracefully** instead of crashing (priority)
+- [x] ~~**Handle HTTP errors gracefully** instead of crashing (priority)~~
 - [ ] Be able to change / reset your API key from within the app
 - [ ] Add color & style to the terminal output
 - [ ] Settings menu, including:
