@@ -2,7 +2,7 @@ import webbrowser, time
 from movielist.input_ext import take_input
 from movielist.tmdb import TMDBClient
 from movielist.library_main import Library
-from movielist.utils import clear, load_genres
+from movielist.utils import show_banner, clear, load_genres, format_rating
 import movielist.storage as storage
 import sys
 
@@ -20,7 +20,7 @@ class App:
         title = item['title' if is_a_movie else 'name']
         original_title = item['original_title' if is_a_movie else 'original_name']
         overview = item.get('overview', '')
-        rating = item.get('vote_average')
+        rating = format_rating(item.get('vote_average'))
         genre = item.get('genre_ids', [])
         release_date = item.get('release_date' if is_a_movie else 'first_air_date', '')
         poster_path = item.get('poster_path', '')
@@ -29,10 +29,10 @@ class App:
         while True:
             clear()
             print(title if title == original_title else f'{title} ({original_title})')
-            print(f'★ {str(rating)[:3]}/10 | {", ".join([self.genre_list.get(str(g)) for g in genre])} | {release_date}')
-            print("--------------")
+            print(f'★ {rating}/10 | {", ".join([self.genre_list.get(str(g)) for g in genre])} | {release_date}')
+            print("-----------------------------")
             print(overview or "No description.")
-            print("--------------")
+            print("-----------------------------")
             is_watched = self.library.is_watched(item_id)
             if is_watched is not None:
                 print(f"In library | {'👁  Watched' if is_watched else '👁  Not Watched'}")
@@ -47,7 +47,8 @@ class App:
                     clear()
                     return
                 case 'p':
-                    webbrowser.open(f'{self.client.image_url}{poster_path}')
+                    if poster_path is not None:
+                        webbrowser.open(f'{self.client.image_url}{poster_path}')
                 case 'l':
                     index = self.library.library_index(item_id)
                     if index is None:
@@ -92,7 +93,7 @@ class App:
             full_result = result["results"]
             result_len = len(full_result)
             for i, res in enumerate(full_result, 1):
-                print(f'{i}. {res['title'] if query_type == 'm' else res['name']} ({res['release_date'][:4] if query_type == 'm' else res['first_air_date']}) [★ {str(res['vote_average'])[:3]}/10]')
+                print(f'{i}. {res['title'] if query_type == 'm' else res['name']} ({res['release_date'][:4] if query_type == 'm' else res['first_air_date']}) [★ {format_rating(res['vote_average'])}/10]')
             time_end = time.perf_counter()
 
             print()
@@ -126,7 +127,7 @@ class App:
             else:
                 for i, item in enumerate(self.library.library_data, 1):
                     is_a_movie = item.get('title') != None
-                    print(f'{i}. {item['title'] if is_a_movie else item['name']} ({item['release_date'][:4] if is_a_movie else item['first_air_date']}) [★ {str(item['vote_average'])[:3]}/10] {'👁' if item['is_watched'] else ''}')
+                    print(f'{i}. {item['title'] if is_a_movie else item['name']} ({item['release_date'][:4] if is_a_movie else item['first_air_date']}) [★ {format_rating(item['vote_average'])}/10] {'👁' if item['is_watched'] else ''}')
             
             print()
             print("[q] back | [number] select")
@@ -142,8 +143,9 @@ class App:
     def authenticate(self):
         valid = self.client.authentication().get("success")
         if not valid:
+            show_banner()
             print("Welcome to Movielist!")
-            print("For info about this step, check out https://youtube.com")
+            print("For info about this step, check out https://github.com/dhanaan/Movielist/blob/main/SETUP.md")
 
         while not valid:
             self.API = take_input("Enter TMDB API Read Access Token: ")
@@ -160,6 +162,7 @@ class App:
         self.setup()
         while True:
             clear()
+            show_banner()
             print("Welcome to Movielist!")
             print("[s] to search")
             print("[l] to see your library")

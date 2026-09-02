@@ -3,6 +3,14 @@ import os
 import movielist.storage as storage
 from movielist.tmdb import TMDBClient
 
+def show_banner():
+    print(r"""
+  __  __         _     _ _    _   
+ |  \/  |_____ _(_)___| (_)__| |_ 
+ | |\/| / _ \ V / / -_) | (_-<  _|
+ |_|  |_\___/\_/|_\___|_|_/__/\__|
+    """)
+
 def clear():
     subprocess.run("cls" if os.name == "nt" else "clear", shell=True)
 
@@ -25,3 +33,8 @@ def load_genres(json_path: str, Client: TMDBClient):
     else:
         return result
 
+def format_rating(rating):
+    rounded = round(rating, 1)
+    if rounded == int(rounded):
+        return str(int(rounded))
+    return str(rounded)
