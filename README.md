@@ -54,11 +54,10 @@ uv run movielist
 ## Roadmap
 
 - [x] ~~**Handle HTTP errors gracefully** instead of crashing (priority)~~
-- [ ] Be able to change / reset your API key from within the app
 - [ ] Add color & style to the terminal output
 - [ ] Settings menu, including:
-  - [ ] Toggle startup authentication
-- [ ] Update the library movie/show data (refetch)
+  - [ ] Reset/Change API key
+- [ ] Update in-library movie/show data (refetch)
 - [ ] View your library even without authentication or an internet connection
 - [ ] Add notes to movies/shows
 - [ ] Show 5 search results per query (instead of 20)
