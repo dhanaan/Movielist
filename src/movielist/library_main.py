@@ -1,6 +1,6 @@
 import movielist.storage as storage
 
-def autosave(func) -> function:
+def autosave(func):
     def wrapper(self, *args, **kwargs):
         result = func(self, *args, **kwargs)
         storage.write(self.json_path, self.library_data)
@@ -13,7 +13,9 @@ class Library:
         self.json_path: str = json_path
 
     def read(self):
-        self.library_data = storage.read(self.json_path)
+        result = storage.read(self.json_path)
+        if result is not None:
+            self.library_data = result
 
     def library_index(self, id):
         for i, item in enumerate(self.library_data):
@@ -25,7 +27,7 @@ class Library:
         return len(self.library_data)
           
     def get_data(self, index):
-        return self.library_data.get(index)
+        return self.library_data[index]
         
     def is_watched(self, id):
         find = self.library_index(id)

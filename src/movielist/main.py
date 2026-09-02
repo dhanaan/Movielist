@@ -2,7 +2,7 @@ import webbrowser, time
 from movielist.input_ext import take_input
 from movielist.tmdb import TMDBClient
 from movielist.library_main import Library
-from movielist.utils import clear, load_genres
+from movielist.utils import show_banner, clear, load_genres, format_rating
 import movielist.storage as storage
 import sys
 
@@ -15,16 +15,25 @@ class App:
         self.library = Library(json_path="library.json")
         self.genre_list = load_genres("genres.json", self.client)
 
+    def show_details(self, item):
+        is_a_movie = item.get('title') is not None
+        title = item['title' if is_a_movie else 'name']
+        original_title = item['original_title' if is_a_movie else 'original_name']
+        overview = item.get('overview', '')
+        rating = format_rating(item.get('vote_average'))
+        genre = item.get('genre_ids', [])
+        release_date = item.get('release_date' if is_a_movie else 'first_air_date', '')
+        poster_path = item.get('poster_path', '')
+        item_id = item.get('id')
 
-    def show_details(self, title, original_title, overview, rating, genre, release_date, poster_path, id, item):
         while True:
             clear()
             print(title if title == original_title else f'{title} ({original_title})')
-            print(f'★ {str(rating)[:3]}/10 | {", ".join([self.genre_list.get(str(g)) for g in genre])} | {release_date}')
-            print("--------------")
+            print(f'★ {rating}/10 | {", ".join([self.genre_list.get(str(g)) for g in genre])} | {release_date}')
+            print("-----------------------------")
             print(overview or "No description.")
-            print("--------------")
-            is_watched = self.library.is_watched(id)
+            print("-----------------------------")
+            is_watched = self.library.is_watched(item_id)
             if is_watched is not None:
                 print(f"In library | {'👁  Watched' if is_watched else '👁  Not Watched'}")
             else:
@@ -38,18 +47,19 @@ class App:
                     clear()
                     return
                 case 'p':
-                    webbrowser.open(f'{self.client.image_url}{poster_path}')
+                    if poster_path is not None:
+                        webbrowser.open(f'{self.client.image_url}{poster_path}')
                 case 'l':
-                    index = self.library.library_index(id)
+                    index = self.library.library_index(item_id)
                     if index is None:
                         self.library.add_item(item)
                     else:
                         self.library.remove_item(index)
                 case 'c':
-                    index = self.library.library_index(id)
+                    index = self.library.library_index(item_id)
                     if index is None:
                         self.library.add_item(item)
-                        index = self.library.library_index(id)
+                        index = self.library.library_index(item_id)
                     self.library.change_is_watched(index)
 
     def search_in_app(self):
@@ -83,7 +93,7 @@ class App:
             full_result = result["results"]
             result_len = len(full_result)
             for i, res in enumerate(full_result, 1):
-                print(f'{i}. {res['title'] if query_type == 'm' else res['name']} ({res['release_date'][:4] if query_type == 'm' else res['first_air_date']}) [★ {str(res['vote_average'])[:3]}/10]')
+                print(f'{i}. {res['title'] if query_type == 'm' else res['name']} ({res['release_date'][:4] if query_type == 'm' else res['first_air_date']}) [★ {format_rating(res['vote_average'])}/10]')
             time_end = time.perf_counter()
 
             print()
@@ -105,7 +115,7 @@ class App:
                         print("Cannot go below 1")
                 case _:
                     item = full_result[int(usr) - 1]
-                    self.show_details(title= item['title' if query_type == 'm' else 'name'], original_title=item['original_title' if query_type == 'm' else 'original_name'], overview=item['overview'], rating=item['vote_average'], genre=item['genre_ids'], release_date= item['release_date' if query_type == 'm' else 'first_air_date'], poster_path= item['poster_path'], id=item['id'], item=item)
+                    self.show_details(item)
 
     def see_library(self):
         clear()
@@ -117,7 +127,7 @@ class App:
             else:
                 for i, item in enumerate(self.library.library_data, 1):
                     is_a_movie = item.get('title') != None
-                    print(f'{i}. {item['title'] if is_a_movie else item['name']} ({item['release_date'][:4] if is_a_movie else item['first_air_date']}) [★ {str(item['vote_average'])[:3]}/10] {'👁' if item['is_watched'] else ''}')
+                    print(f'{i}. {item['title'] if is_a_movie else item['name']} ({item['release_date'][:4] if is_a_movie else item['first_air_date']}) [★ {format_rating(item['vote_average'])}/10] {'👁' if item['is_watched'] else ''}')
             
             print()
             print("[q] back | [number] select")
@@ -127,14 +137,16 @@ class App:
                     return
                 case _:
                     item = self.library.library_data[int(usr) - 1]
-                    is_a_movie = item.get('title') != None
-                    self.show_details(title= item['title' if is_a_movie else 'name'], original_title=item['original_title' if is_a_movie else 'original_name'], overview=item['overview'], rating=item['vote_average'], genre=item['genre_ids'], release_date= item['release_date' if is_a_movie else 'first_air_date'], poster_path= item['poster_path'], id=item['id'], item=item)
+                    self.show_details(item)
 
 
     def authenticate(self):
         valid = self.client.authentication().get("success")
-        print("Welcome to Movielist!")
-        print("For info about this step, check out https://youtube.com")
+        if not valid:
+            show_banner()
+            print("Welcome to Movielist!")
+            print("For info about this step, check out https://github.com/dhanaan/Movielist/blob/main/SETUP.md")
+
         while not valid:
             self.API = take_input("Enter TMDB API Read Access Token: ")
             self.client = TMDBClient(self.API)
@@ -150,6 +162,7 @@ class App:
         self.setup()
         while True:
             clear()
+            show_banner()
             print("Welcome to Movielist!")
             print("[s] to search")
             print("[l] to see your library")
