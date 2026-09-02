@@ -14,7 +14,7 @@ def show_banner():
 def clear():
     subprocess.run("cls" if os.name == "nt" else "clear", shell=True)
 
-def load_genres(json_path: str, Client: TMDBClient):
+def load_genres(json_path: str, Client: TMDBClient) -> dict:
     result = storage.read(json_path)
     if result is None:
         client = Client
@@ -33,8 +33,29 @@ def load_genres(json_path: str, Client: TMDBClient):
     else:
         return result
 
-def format_rating(rating):
+def format_rating(rating: int) -> str:
     rounded = round(rating, 1)
     if rounded == int(rounded):
         return str(int(rounded))
     return str(rounded)
+
+def print_error(error_obj):
+    if isinstance(error_obj, str):
+        print(error_obj)
+    else:
+        if error_obj.status_code is None:
+            print("ERROR: there is a network problem, check your connection and try again.")
+        else:
+            print(f"{error_obj.status_code} ERROR: {error_obj.response_data.get("status_message") or "No Information."}")
+
+    
+def looks_like_jwt(token: str) -> bool:
+    """
+    Cheap sanity check to catch empty input, accidental whitespace, or a
+    pasted v3 API key instead of a v4 token.
+    """
+    token = str(token).strip()
+    if not token or token.count(".") != 2 or len(token) < 100:
+        return False
+    else:
+        return True

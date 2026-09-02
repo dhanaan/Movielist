@@ -1,8 +1,8 @@
 import webbrowser, time
 from movielist.input_ext import take_input
-from movielist.tmdb import TMDBClient
+from movielist.tmdb import TMDBClient, TMDBAPIError, TMDBConnectionError
 from movielist.library_main import Library
-from movielist.utils import show_banner, clear, load_genres, format_rating
+from movielist.utils import show_banner, clear, load_genres, format_rating, print_error, looks_like_jwt
 import movielist.storage as storage
 import sys
 
@@ -14,6 +14,14 @@ class App:
     def setup(self):
         self.library = Library(json_path="library.json")
         self.genre_list = load_genres("genres.json", self.client)
+
+    def change_api(self, new: str):
+        self.API = new
+        self.client.change_access_token(self.API)
+
+    @staticmethod
+    def enter_to_continue():
+        take_input("Press Enter to try again: ")
 
     def show_details(self, item):
         is_a_movie = item.get('title') is not None
@@ -63,7 +71,6 @@ class App:
                     self.library.change_is_watched(index)
 
     def search_in_app(self):
-        clear()
         print("search engine")
         print("[q] back | [m] movies | [s] tv-series/anime")
         query_type_short = {
@@ -71,10 +78,11 @@ class App:
             's':'tv',
             'q':'return'
         }
+
         query_type = take_input("$ ", choices=query_type_short.keys())
         if query_type == 'q':
             return
-
+        
         query = take_input("search > ")
         page = 1
         result_cache = {}
@@ -84,8 +92,18 @@ class App:
             print(f'search > {query}')
             time_start = time.perf_counter()
             if result_cache.get(page) is None:
-                result = self.client.search(query, query_type=query_type_short[query_type], page=page)
-                result_cache[page] = result
+                while result_cache.get(page) is None:
+                    try:
+                        result = self.client.search(query, query_type=query_type_short[query_type], page=page)
+                        result_cache[page] = result
+                    except TMDBConnectionError as e:
+                        print_error(e)
+                        self.enter_to_continue()
+                    except TMDBAPIError as e:
+                        print_error(e)
+                        self.enter_to_continue()
+                    clear()
+                    print(f"search > {query}")
             else:
                 result = result_cache.get(page)
 
@@ -140,24 +158,50 @@ class App:
                     self.show_details(item)
 
 
+    def try_authenticate(self, show_mesage = True):
+        if not looks_like_jwt(self.API):
+            if show_mesage: print_error("ERROR: Access Token is not valid.")
+            return [False, TMDBAPIError]
+        
+        # REMEMBER TMDBConnectionError is a child of TMDBAPIError so order correctly, if not the parent will catch them
+        try:
+            self.client.authentication()
+            return [True, None]
+        except TMDBConnectionError as e:
+            if show_mesage: print_error(e)
+            return [False, TMDBConnectionError]
+        except TMDBAPIError as e:
+            if show_mesage: print_error(e)
+            return [False, TMDBAPIError]
+
     def authenticate(self):
-        valid = self.client.authentication().get("success")
+        api_changed = False
+        first_time = self.API == [] or self.API == None # default at first is this
+        auth = self.try_authenticate(show_mesage=not first_time)
+        valid = auth[0]
+
         if not valid:
-            show_banner()
-            print("Welcome to Movielist!")
-            print("For info about this step, check out https://github.com/dhanaan/Movielist/blob/main/SETUP.md")
+            valid_method = auth[1]
+            if first_time:
+                show_banner()
+                print("Welcome to Movielist!")
+                print("For info about this step, check out https://github.com/dhanaan/Movielist/blob/main/SETUP.md")
+                print()
 
         while not valid:
-            self.API = take_input("Enter TMDB API Read Access Token: ")
-            self.client = TMDBClient(self.API)
-            result = self.client.authentication()
-            valid = result.get("success")
-            if not valid:
-                print(result.get("status_message"))
+            if valid_method is TMDBAPIError:
+                self.change_api(take_input("Enter TMDB API Read Access Token: "))
             else:
-                storage.write("api.json", self.API)
-            print()
-            
+                self.enter_to_continue()
+
+            auth = self.try_authenticate()
+            valid = auth[0]
+            valid_method = auth[1]
+
+            api_changed = True
+
+        if api_changed: storage.write("api.json", self.API)
+
     def start(self):
         self.setup()
         while True:
@@ -167,7 +211,7 @@ class App:
             print("[s] to search")
             print("[l] to see your library")
             print("[q] to quit")
-            usr = take_input("$ ", choices=['q', 'l', 's'])
+            usr = take_input("$ ", choices=['s', 'l', 'q'])
             match usr:
                 case 'q':
                     sys.exit()
