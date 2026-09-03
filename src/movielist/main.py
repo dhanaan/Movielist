@@ -5,6 +5,7 @@ from movielist.library_main import Library
 from movielist.utils import show_banner, clear, load_genres, format_rating, print_error, looks_like_jwt
 import movielist.storage as storage
 import sys
+import textwrap
 
 class App:
     def __init__(self):
@@ -23,33 +24,48 @@ class App:
     def enter_to_continue():
         take_input("Press Enter to try again: ")
 
+    def edit_note(self, title: str, previous_note: str) -> str:
+        clear()
+        print(f"Add note for {title}")
+        if previous_note:
+            print(f"Previous note: (Ctrl+Shift+C to copy, Ctrl+Shift+V to paste)")
+            print(previous_note)
+            print()
+        return take_input("~> ")
+    
     def show_details(self, item):
         is_a_movie = item.get('title') is not None
         title = item['title' if is_a_movie else 'name']
         original_title = item['original_title' if is_a_movie else 'original_name']
-        overview = item.get('overview', '')
+        overview = textwrap.fill(item.get('overview', ''), width=80)
         rating = format_rating(item.get('vote_average'))
         genre = item.get('genre_ids', [])
         release_date = item.get('release_date' if is_a_movie else 'first_air_date', '')
         poster_path = item.get('poster_path', '')
         item_id = item.get('id')
-
         while True:
             clear()
             print(title if title == original_title else f'{title} ({original_title})')
             print(f'★ {rating}/10 | {", ".join([self.genre_list.get(str(g)) for g in genre])} | {release_date}')
-            print("-----------------------------")
+            print("---------------------------------------")
             print(overview or "No description.")
-            print("-----------------------------")
-            is_watched = self.library.is_watched(item_id)
-            if is_watched is not None:
+            print("---------------------------------------")
+
+            if self.library.library_index(item_id) is not None:
+                is_watched = self.library.is_watched(item_id)
                 print(f"In library | {'👁  Watched' if is_watched else '👁  Not Watched'}")
             else:
                 print("Not in library")
+            
+            note = self.library.get_note(item_id)
+            if note:
+                print()
+                print(f"Note:")
+                print(note)
 
             print()
-            print("[q] back | [p] poster | [l] add/remove to library | [c] change watched state")
-            usr = take_input("$ ", choices=['q', 'p', 'l', 'c'])
+            print("[q] back | [p] poster | [l] add/remove to library | [c] change watched state | [n] add/change notes")
+            usr = take_input("$ ", choices=['q', 'p', 'l', 'c', 'n'])
             match usr:
                 case 'q':
                     clear()
@@ -69,6 +85,13 @@ class App:
                         self.library.add_item(item)
                         index = self.library.library_index(item_id)
                     self.library.change_is_watched(index)
+                case 'n':
+                    index = self.library.library_index(item_id)
+                    if index is None:
+                        self.library.add_item(item)
+                        index = self.library.library_index(item_id)
+                    self.library.change_note(index, self.edit_note(title, note))
+
 
     def search_in_app(self):
         print("search engine")
@@ -138,14 +161,14 @@ class App:
     def see_library(self):
         clear()
         self.library.read()
-        print("library > ")
         while True:
+            print("library > ")
             if not self.library.library_data:
                 print("Nothing in your library..")
             else:
                 for i, item in enumerate(self.library.library_data, 1):
                     is_a_movie = item.get('title') != None
-                    print(f'{i}. {item['title'] if is_a_movie else item['name']} ({item['release_date'][:4] if is_a_movie else item['first_air_date']}) [★ {format_rating(item['vote_average'])}/10] {'👁' if item['is_watched'] else ''}')
+                    print(f'{i}. {item['title'] if is_a_movie else item['name']} ({item['release_date'][:4] if is_a_movie else item['first_air_date']}) [★ {format_rating(item['vote_average'])}/10] {'👁' if item.get('is_watched', False) else ''}')
             
             print()
             print("[q] back | [number] select")

@@ -59,7 +59,7 @@ uv run movielist
   - [ ] Reset/Change API key
 - [ ] Update in-library movie/show data (refetch)
 - [ ] View your library even without authentication or an internet connection
-- [ ] Add notes to movies/shows
+- [x] ~~Add notes to movies/shows~~
 - [ ] Show 5 search results per query (instead of 20)
 - [ ] Bundle the project with PyInstaller into `.exe`, `.app`, and a Linux binary, with GitHub Actions to build them automatically
 
