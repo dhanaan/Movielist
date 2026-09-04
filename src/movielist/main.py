@@ -5,15 +5,6 @@ from movielist.library_main import Library
 from movielist.utils import *
 import movielist.storage as storage
 import textwrap
-from colorama import init, Fore, Style
-
-init(autoreset=True)
-HEADER = Fore.CYAN + Style.BRIGHT
-MENU = Fore.MAGENTA
-SUCCESS = Fore.GREEN
-WARN = Fore.YELLOW
-LINK = Fore.BLUE
-DIM = Style.DIM
 
 class App:
     def __init__(self):
@@ -146,7 +137,7 @@ class App:
                 print(textwrap.fill(note))
 
             print()
-            print(f"{MENU}[q] back | [l] add/remove to library | [c] change watched state | [n] add/change notes")
+            print(menu(("q", "back"), ("l", "add/remove to library"), ("c", "change watched state"), ("n", "add/change notes")))
             usr = take_input("$ ", choices=['q', 'l', 'c', 'n'])
             match usr:
                 case 'q':
@@ -175,18 +166,20 @@ class App:
     def search_in_app(self):
         clear()
         print(f"{HEADER}search engine > ")
-        print(f"{MENU}[q] back | [m] movies | [s] tv-series/anime")
+        print(menu(("q", "back"), ("m", "movies"), ("s", "tv-series/anime")))
         query_type_short = {
             'm':'movie',
             's':'tv',
-            'q':'return'
+            'q':'back'
         }
 
         query_type = take_input("$ ", choices=query_type_short.keys())
         if query_type == 'q':
             return
-        
-        query = take_input("search > ")
+
+        clear()
+        print(f"{HEADER}{"movies" if query_type == 'm' else "tv-series"} search > ")
+        query = take_input("$ ")
         page = 1
         result_cache = {}
 
@@ -219,7 +212,7 @@ class App:
 
             print()
             print(f'{DIM}[page {page}/{total_page}] [{result_len} results in {time_end - time_start:.3f}]')
-            print(f"{MENU}[q] back | [n] next | [p] previous | [number] select")
+            print(menu(("q", "back"), ("n", "next"), ("p", "previous"), ("number", "select")))
             usr = take_input("$ ", choices=['q', 'n', 'p'] + list(map(str, range(1, result_len + 1))))
             match usr:
                 case 'q':
@@ -253,8 +246,7 @@ class App:
                     watched = item.get('is_watched', False)
                     print(f'{i}. {item['title'] if is_a_movie else item['name']} ({item['release_date'][:4] if is_a_movie else item['first_air_date']}) [{WARN}★ {format_rating(item['vote_average'])}/10{Style.RESET_ALL}] {SUCCESS + "👁" if watched else ""}')
             
-            print()
-            print(f"{MENU}[q] back | [number] select")
+            print(menu(("q", "back"), ("number", "select")))
             usr = take_input("$ ", choices=['q'] + list(map(str, range(1, len(self.library) + 1))))
             match usr:
                 case 'q':
@@ -312,9 +304,9 @@ class App:
     def options(self):
         while True:
             clear()
-            print(f"{HEADER}options >")
-            print(f"{MENU}[a] change TMDB Access Token")
-            print(f"{MENU}[q] back")
+            print(f"{HEADER}options > ")
+            print(menu(("a", "change TMDB Access Token")))
+            print(menu(("q", "back")))
             usr = take_input("$ ", choices=['a', 'q'])
             match usr:
                 case 'q':
@@ -331,10 +323,10 @@ class App:
             clear()
             show_banner()
             print(f"{HEADER}Welcome to Movielist!")
-            print(f"{MENU}[s] to search")
-            print(f"{MENU}[l] to see your library")
-            print(f"{MENU}[o] options")
-            print(f"{MENU}[q] to quit")
+            print(menu(("s", "search")))
+            print(menu(("l", "library")))
+            print(menu(("o", "options")))
+            print(menu(("q", "quit")))
             usr = take_input("$ ", choices=['s', 'l','o', 'q'])
             match usr:
                 case 'q':

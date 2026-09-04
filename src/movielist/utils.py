@@ -1,9 +1,17 @@
 import subprocess
 import os
-from colorama import init, Fore
+from colorama import init, Fore, Style
 
 init(autoreset=True)
+
 ERROR = Fore.RED
+HEADER = Fore.CYAN + Style.BRIGHT
+MENU = Fore.MAGENTA
+SUCCESS = Fore.GREEN
+WARN = Fore.YELLOW
+LINK = Fore.BLUE
+DIM = Style.DIM
+RESET = Style.RESET_ALL
 
 def show_banner():
     print(r"""
@@ -74,3 +82,9 @@ def format_runtime(min: int, convert_below_hour = True):
 
 def link_it(text, url):
     return f"\033]8;;{url}\033\\{text}\033]8;;\033\\"
+
+def menu(*items):
+    parts = []
+    for key, label in items:
+        parts.append(f"{MENU}[{key}] {RESET}{label if label else ""}")
+    return f" | ".join(parts)
