@@ -53,16 +53,15 @@ uv run movielist
 
 ## Roadmap
 
-- [ ] **Handle HTTP errors gracefully** instead of crashing (priority)
-- [ ] Be able to change / reset your API key from within the app
-- [ ] Add color & style to the terminal output
-- [ ] Settings menu, including:
-  - [ ] Toggle startup authentication
-- [ ] Update the library movie/show data (refetch)
+- [x] ~~**Handle HTTP errors gracefully** instead of crashing (priority)~~
+- [x] ~~Add color & style to the terminal output~~
+- [x] ~~Settings menu, including:~~
+  - [x] ~~Reset/Change API key~~
+- [ ] Update in-library movie/show data (refetch)
 - [ ] View your library even without authentication or an internet connection
-- [ ] Add notes to movies/shows
+- [x] ~~Add notes to movies/shows~~
 - [ ] Show 5 search results per query (instead of 20)
-- [ ] Bundle the project with PyInstaller into `.exe`, `.app`, and a Linux binary, with GitHub Actions to build them automatically
+- [x] ~~Bundle the project with PyInstaller into `.exe`, `.app`, and a Linux binary, with GitHub Actions to build them automatically~~
 
 ## Contributing
 

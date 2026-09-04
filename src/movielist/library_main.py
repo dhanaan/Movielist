@@ -25,6 +25,13 @@ class Library:
 
     def __len__(self):
         return len(self.library_data)
+
+    def get_data_by_id(self, id):
+        idx = self.library_index(id)
+        if idx is not None:
+            return self.get_data(idx)
+        else:
+            return None
           
     def get_data(self, index):
         return self.library_data[index]
@@ -32,9 +39,15 @@ class Library:
     def is_watched(self, id):
         find = self.library_index(id)
         if find is not None:
-            return self.library_data[find]['is_watched']
+            return self.library_data[find].get('is_watched', None)
         return None
-
+    
+    def get_note(self, id):
+        find = self.library_index(id)
+        if find is not None:
+            return self.library_data[find].get('note', '')
+        return ''
+    
     @autosave
     def add_item(self, item):
         self.library_data.append(item)
@@ -46,6 +59,9 @@ class Library:
 
     @autosave
     def change_is_watched(self, index):
-        watched = self.library_data[index]["is_watched"]
+        watched = self.library_data[index].get("is_watched", False)
         self.library_data[index]["is_watched"] = not watched
 
+    @autosave
+    def change_note(self, index, new):
+        self.library_data[index]["note"] = new

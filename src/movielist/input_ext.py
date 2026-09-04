@@ -1,4 +1,8 @@
 import sys
+from colorama import init, Style
+
+init(autoreset=True)
+DIM = Style.DIM
 
 def take_input(text: str = "", allow_type: type = str, case_sensitive: bool = False,
           choices = None, rule = lambda x: True, rule_error: str = "rule violated"):
@@ -11,7 +15,7 @@ def take_input(text: str = "", allow_type: type = str, case_sensitive: bool = Fa
         try:
             usr = input(text)
         except KeyboardInterrupt:
-            print("Goodbye")
+            print(f"{DIM}Goodbye")
             sys.exit()
 
         # type convert
@@ -43,7 +47,7 @@ def _string_checks(usr, choices, case_sensitive):
     if usr in choices:
         return True
     else:
-        print(f'Invalid, please choose between ({", ".join(choices)})')
+        print(f'{DIM}Invalid, please choose between ({", ".join(choices)})')
         return False
 
 def _is_valid_rule(usr, rule, rule_error):
@@ -66,5 +70,5 @@ def _change_type(usr, allow_type):
         return allow_type(usr)
     
     except (ValueError, TypeError):
-        print(f'Invalid, {usr} is not a valid {allow_type.__name__}')
+        print(f'{DIM}Invalid, {usr} is not a valid {allow_type.__name__}')
         return None
