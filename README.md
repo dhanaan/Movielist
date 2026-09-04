@@ -54,14 +54,14 @@ uv run movielist
 ## Roadmap
 
 - [x] ~~**Handle HTTP errors gracefully** instead of crashing (priority)~~
-- [ ] Add color & style to the terminal output
-- [ ] Settings menu, including:
-  - [ ] Reset/Change API key
+- [x] ~~Add color & style to the terminal output~~
+- [x] ~~Settings menu, including:~~
+  - [x] ~~Reset/Change API key~~
 - [ ] Update in-library movie/show data (refetch)
 - [ ] View your library even without authentication or an internet connection
 - [x] ~~Add notes to movies/shows~~
 - [ ] Show 5 search results per query (instead of 20)
-- [ ] Bundle the project with PyInstaller into `.exe`, `.app`, and a Linux binary, with GitHub Actions to build them automatically
+- [x] ~~Bundle the project with PyInstaller into `.exe`, `.app`, and a Linux binary, with GitHub Actions to build them automatically~~
 
 ## Contributing
 

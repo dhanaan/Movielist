@@ -5,6 +5,7 @@ description = "lightweight CLI tool to search movies/tv-series"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "colorama>=0.4.6",
     "requests>=2.34.2",
 ]
 

@@ -64,3 +64,6 @@ class TMDBClient:
     def genre(self, query_type: str):
         params = {"language": "en-US"}
         return self._request("GET", f"/genre/{query_type}/list", params=params)
+
+    def get_data(self, id, query_type="movie"):
+        return self._request("GET", f'/{query_type}/{id}')

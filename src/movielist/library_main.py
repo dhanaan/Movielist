@@ -25,6 +25,13 @@ class Library:
 
     def __len__(self):
         return len(self.library_data)
+
+    def get_data_by_id(self, id):
+        idx = self.library_index(id)
+        if idx is not None:
+            return self.get_data(idx)
+        else:
+            return None
           
     def get_data(self, index):
         return self.library_data[index]
@@ -44,7 +51,7 @@ class Library:
     @autosave
     def add_item(self, item):
         self.library_data.append(item)
-        self.library_data[-1]['is_watched']= False
+        self.library_data[-1]['is_watched'] = False
 
     @autosave
     def remove_item(self, index):

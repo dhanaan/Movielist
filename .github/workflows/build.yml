@@ -1,0 +1,45 @@
+name: Build executables
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            artifact_name: movielist-windows
+            built_file: dist/movielist.exe
+          - os: macos-latest
+            artifact_name: movielist-macos
+            built_file: dist/movielist
+          - os: ubuntu-latest
+            artifact_name: movielist-linux
+            built_file: dist/movielist
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Install project dependencies
+        run: uv sync
+
+      - name: Install PyInstaller
+        run: uv add --dev pyinstaller
+
+      - name: Build executable
+        run: uv run pyinstaller --onefile --name movielist src/movielist/main.py
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: ${{ matrix.built_file }}
