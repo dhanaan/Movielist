@@ -1,15 +1,16 @@
 import time
+import textwrap
+
 from movielist.input_ext import take_input
 from movielist.tmdb import TMDBClient, TMDBAPIError, TMDBConnectionError
 from movielist.library_main import Library
 from movielist.utils import *
 import movielist.storage as storage
-import textwrap
 
 class App:
     def __init__(self):
-        self.API = storage.read("api.json")
-        self.client = TMDBClient(self.API)
+        self.API: str = storage.read("api.json")
+        self.client: TMDBClient = TMDBClient(self.API)
 
     def setup(self):
         self.library = Library(json_path="library.json")
@@ -28,12 +29,12 @@ class App:
         clear()
         print(f"{HEADER}Add note for {title}")
         if previous_note:
-            print(f"Previous note: (Ctrl+Shift+C to copy, Ctrl+Shift+V to paste)")
+            print("Previous note: (Ctrl+Shift+C to copy, Ctrl+Shift+V to paste)")
             print(previous_note)
             print()
         return take_input("~> ")
 
-    def get_full_item(self, id, is_a_movie):
+    def get_full_item(self, id: int, is_a_movie: bool):
         if self.library.library_index(id) is None:
             while True:
                 try:
@@ -48,7 +49,7 @@ class App:
             return self.library.get_data_by_id(id)
 
 
-    def show_details(self, id, is_a_movie):
+    def show_details(self, id: int, is_a_movie: bool):
         item = self.get_full_item(id, is_a_movie) # will loop until get the data
 
         if is_a_movie:
@@ -182,16 +183,22 @@ class App:
         query = take_input("$ ")
         page = 1
         result_cache = {}
-
+        show_index = 0
+        cache_result = []
+        next_page = True
+        next_api_page = True
+        api_page = 1
+        
         while True:
             clear()
             print(f'{HEADER}search > {query}')
-            time_start = time.perf_counter()
-            if result_cache.get(page) is None:
-                while result_cache.get(page) is None:
+            #time_start = time.perf_counter()
+            # result = json from {"0":{"a":"b"}} that data means whole data of an API page
+            if result_cache.get(api_page) is None:
+                while result_cache.get(api_page) is None:
                     try:
-                        result = self.client.search(query, query_type=query_type_short[query_type], page=page)
-                        result_cache[page] = result
+                        result = self.client.search(query, query_type=query_type_short[query_type], page=api_page)
+                        result_cache[api_page] = result
                     except TMDBConnectionError as e:
                         print_error(e)
                         self.enter_to_continue()
@@ -201,32 +208,53 @@ class App:
                     clear()
                     print(f"{HEADER}search > {query}")
             else:
-                result = result_cache.get(page)
-
-            total_page = result["total_pages"]
+                result = result_cache.get(api_page)
+                
+            total_api_page = result["total_pages"]
             full_result = result["results"]
-            result_len = len(full_result)
-            for i, res in enumerate(full_result, 1):
-                print(f'{i}. {res['title'] if query_type == 'm' else res['name']} ({res['release_date'][:4] if query_type == 'm' else res['first_air_date']}) [{WARN}★ {format_rating(res['vote_average'])}/10{Style.RESET_ALL}]')
-            time_end = time.perf_counter()
+            
+            if next_api_page:
+                for i, res in enumerate(full_result, len(cache_result)):
+                    cache_result.append(f'{i}. {res['title'] if query_type == 'm' else res['name']} ({res['release_date'][:4] if query_type == 'm' else res['first_air_date']}) [{WARN}★ {format_rating(res['vote_average'])}/10{Style.RESET_ALL}]')
+                    next_api_page = False
+                    
+            if (show_index + 10) > len(cache_result) and api_page < total_api_page:
+                next_api_page = True
+                api_page += 1
+                continue
+                
+
+            if next_page is True:
+                next_page = None
+                for i in range(10):
+                    if show_index < len(cache_result):
+                        show_index += 1
+                    else:
+                        break
+                    print(cache_result[show_index])
+
+            elif next_page is False:
+                next_page = None
+                for i in range(10):
+                    if show_index > 0:
+                        show_index -= 1
+                    else:
+                        break
+                    print(cache_result[show_index])
+
+            #time_end = time.perf_counter()
 
             print()
-            print(f'{DIM}[page {page}/{total_page}] [{result_len} results in {time_end - time_start:.3f}]')
+            #print(f'{DIM}[page {page}/{total_page}] [{result_len} results in {time_end - time_start:.3f}]')
             print(menu(("q", "back"), ("n", "next"), ("p", "previous"), ("number", "select")))
-            usr = take_input("$ ", choices=['q', 'n', 'p'] + list(map(str, range(1, result_len + 1))))
+            usr = take_input("$ ", choices=['q', 'n', 'p'])
             match usr:
                 case 'q':
                     return
                 case 'n':
-                    if page < total_page:
-                        page += 1 
-                    else:
-                        print(f"{WARN}Cannot go above {total_page}")
+                    next_page = True
                 case 'p':
-                    if page > 1:
-                        page -= 1 
-                    else:
-                        print(f"{WARN}Cannot go below 1")
+                    next_page = False
                 case _:
                     item = full_result[int(usr) - 1]
                     item_id = item.get("id")

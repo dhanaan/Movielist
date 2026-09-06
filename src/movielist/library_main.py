@@ -1,4 +1,5 @@
-import movielist.storage as storage
+from movielist import storage
+
 
 def autosave(func):
     def wrapper(self, *args, **kwargs):
@@ -9,10 +10,10 @@ def autosave(func):
 
 class Library:
     def __init__(self, json_path):
-        self.library_data: list = list([])
+        self.library_data: list = []
         self.json_path: str = json_path
 
-    def read(self):
+    def read(self) -> None:
         result = storage.read(self.json_path)
         if result is not None:
             self.library_data = result
