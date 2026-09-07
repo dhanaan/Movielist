@@ -1,24 +1,16 @@
 import time
+import textwrap
+
 from movielist.input_ext import take_input
 from movielist.tmdb import TMDBClient, TMDBAPIError, TMDBConnectionError
 from movielist.library_main import Library
 from movielist.utils import *
 import movielist.storage as storage
-import textwrap
-from colorama import init, Fore, Style
-
-init(autoreset=True)
-HEADER = Fore.CYAN + Style.BRIGHT
-MENU = Fore.MAGENTA
-SUCCESS = Fore.GREEN
-WARN = Fore.YELLOW
-LINK = Fore.BLUE
-DIM = Style.DIM
 
 class App:
     def __init__(self):
-        self.API = storage.read("api.json")
-        self.client = TMDBClient(self.API)
+        self.API: str = storage.read("api.json")
+        self.client: TMDBClient = TMDBClient(self.API)
 
     def setup(self):
         self.library = Library(json_path="library.json")
@@ -37,12 +29,12 @@ class App:
         clear()
         print(f"{HEADER}Add note for {title}")
         if previous_note:
-            print(f"Previous note: (Ctrl+Shift+C to copy, Ctrl+Shift+V to paste)")
+            print("Previous note: (Ctrl+Shift+C to copy, Ctrl+Shift+V to paste)")
             print(previous_note)
             print()
         return take_input("~> ")
 
-    def get_full_item(self, id, is_a_movie):
+    def get_full_item(self, id: int, is_a_movie: bool):
         if self.library.library_index(id) is None:
             while True:
                 try:
@@ -57,7 +49,7 @@ class App:
             return self.library.get_data_by_id(id)
 
 
-    def show_details(self, id, is_a_movie):
+    def show_details(self, id: int, is_a_movie: bool):
         item = self.get_full_item(id, is_a_movie) # will loop until get the data
 
         if is_a_movie:
@@ -146,7 +138,7 @@ class App:
                 print(textwrap.fill(note))
 
             print()
-            print(f"{MENU}[q] back | [l] add/remove to library | [c] change watched state | [n] add/change notes")
+            print(menu(("q", "back"), ("l", "add/remove to library"), ("c", "change watched state"), ("n", "add/change notes")))
             usr = take_input("$ ", choices=['q', 'l', 'c', 'n'])
             match usr:
                 case 'q':
@@ -175,30 +167,35 @@ class App:
     def search_in_app(self):
         clear()
         print(f"{HEADER}search engine > ")
-        print(f"{MENU}[q] back | [m] movies | [s] tv-series/anime")
+        print(menu(("q", "back"), ("m", "movies"), ("s", "tv-series/anime")))
         query_type_short = {
             'm':'movie',
             's':'tv',
-            'q':'return'
+            'q':'back'
         }
 
         query_type = take_input("$ ", choices=query_type_short.keys())
         if query_type == 'q':
             return
-        
-        query = take_input("search > ")
-        page = 1
+
+        clear()
+        print(f"{HEADER}{"movies" if query_type == 'm' else "tv-series"} search > ")
+        query = take_input("$ ")
         result_cache = {}
+        show_page = 0
+        cache_result = []
+        raw_cache = []
+        next_api_page = True
+        api_page = 1
 
         while True:
             clear()
             print(f'{HEADER}search > {query}')
-            time_start = time.perf_counter()
-            if result_cache.get(page) is None:
-                while result_cache.get(page) is None:
+            if result_cache.get(api_page) is None:
+                while result_cache.get(api_page) is None:
                     try:
-                        result = self.client.search(query, query_type=query_type_short[query_type], page=page)
-                        result_cache[page] = result
+                        result = self.client.search(query, query_type=query_type_short[query_type], page=api_page)
+                        result_cache[api_page] = result
                     except TMDBConnectionError as e:
                         print_error(e)
                         self.enter_to_continue()
@@ -208,34 +205,47 @@ class App:
                     clear()
                     print(f"{HEADER}search > {query}")
             else:
-                result = result_cache.get(page)
+                result = result_cache.get(api_page)
 
-            total_page = result["total_pages"]
+            total_api_page = result["total_pages"]
+            total_results = result["total_results"]
             full_result = result["results"]
-            result_len = len(full_result)
-            for i, res in enumerate(full_result, 1):
-                print(f'{i}. {res['title'] if query_type == 'm' else res['name']} ({res['release_date'][:4] if query_type == 'm' else res['first_air_date']}) [{WARN}★ {format_rating(res['vote_average'])}/10{Style.RESET_ALL}]')
-            time_end = time.perf_counter()
+
+            if next_api_page:
+                for i, res in enumerate(full_result, len(cache_result) + 1):
+                    date = res.get('release_date') if query_type == 'm' else res.get('first_air_date')
+                    year = date[:4] if date else '????'
+                    cache_result.append(f'{i}. {res['title'] if query_type == 'm' else res['name']} ({year}) [{WARN}★ {format_rating(res['vote_average'])}/10{Style.RESET_ALL}]')
+                    raw_cache.append(res)
+                    next_api_page = False
+
+            if (show_page + 1) * 10 > len(cache_result) and api_page < total_api_page:
+                next_api_page = True
+                api_page += 1
+                continue
+
+            page_items = cache_result[show_page * 10 : show_page * 10 + 10]
+            for line in page_items:
+                print(line)
+
+            number_choices = [str(n) for n in range(show_page * 10 + 1, show_page * 10 + len(page_items) + 1)]
 
             print()
-            print(f'{DIM}[page {page}/{total_page}] [{result_len} results in {time_end - time_start:.3f}]')
-            print(f"{MENU}[q] back | [n] next | [p] previous | [number] select")
-            usr = take_input("$ ", choices=['q', 'n', 'p'] + list(map(str, range(1, result_len + 1))))
+            local_total_pages = -(-total_results // 10)   # ceil division, no import needed
+            print(f'{DIM}[page {show_page + 1}/{local_total_pages}]')
+            print(menu(("q", "back"), ("n", "next"), ("p", "previous"), ("number", "select")))
+            usr = take_input("$ ", choices=['q', 'n', 'p'] + number_choices)
             match usr:
                 case 'q':
                     return
                 case 'n':
-                    if page < total_page:
-                        page += 1 
-                    else:
-                        print(f"{WARN}Cannot go above {total_page}")
+                    if (show_page + 1) * 10 < len(cache_result) or api_page < total_api_page:
+                        show_page += 1
                 case 'p':
-                    if page > 1:
-                        page -= 1 
-                    else:
-                        print(f"{WARN}Cannot go below 1")
+                    if show_page > 0:
+                        show_page -= 1
                 case _:
-                    item = full_result[int(usr) - 1]
+                    item = raw_cache[int(usr) - 1]
                     item_id = item.get("id")
                     item_a_movie = item.get('title') is not None
                     self.show_details(item_id, item_a_movie)
@@ -243,22 +253,40 @@ class App:
     def see_library(self):
         clear()
         self.library.read()
+        page = 0
+        max_page = 0
+
+        if not self.library.library_data:
+            print(f"{WARN}Nothing in your library..")
+            self.enter_to_continue()
+            return
+
         while True:
+            clear()
             print(f"{HEADER}library > ")
-            if not self.library.library_data:
-                print(f"{WARN}Nothing in your library..")
-            else:
-                for i, item in enumerate(self.library.library_data, 1):
-                    is_a_movie = item.get('title') is not None
-                    watched = item.get('is_watched', False)
-                    print(f'{i}. {item['title'] if is_a_movie else item['name']} ({item['release_date'][:4] if is_a_movie else item['first_air_date']}) [{WARN}★ {format_rating(item['vote_average'])}/10{Style.RESET_ALL}] {SUCCESS + "👁" if watched else ""}')
+
+            cache = []
+            for i, item in enumerate(self.library.library_data, 1):
+                is_a_movie = item.get('title') is not None
+                watched = item.get('is_watched', False)
+                cache.append(f'{i}. {item['title'] if is_a_movie else item['name']} ({item['release_date'][:4] if is_a_movie else item['first_air_date']}) [{WARN}★ {format_rating(item['vote_average'])}/10{Style.RESET_ALL}] {SUCCESS + "👁" if watched else ""}')
+
+            max_page = -(-len(cache) // 10) - 1   # ceil division, then convert to 0-indexed
             
-            print()
-            print(f"{MENU}[q] back | [number] select")
-            usr = take_input("$ ", choices=['q'] + list(map(str, range(1, len(self.library) + 1))))
+            page_items = cache[page * 10 : page * 10 + 10]
+            for line in page_items:
+                print(line)
+            print(f'{DIM}[page {page + 1}/{max_page + 1}]')
+            print(menu(("q", "back"), ("n", "next"), ("p", "previous"), ("number", "select")))
+            number_choices = [str(n) for n in range(page * 10 + 1, page * 10 + len(page_items) + 1)]
+            usr = take_input("$ ", choices=['q', 'n', 'p'] + number_choices)
             match usr:
                 case 'q':
                     return
+                case 'n':
+                    page = min(page + 1, max_page)
+                case 'p':
+                    page = max(page - 1, 0)
                 case _:
                     item = self.library.library_data[int(usr) - 1]
                     item_id = item.get("id")
@@ -312,9 +340,9 @@ class App:
     def options(self):
         while True:
             clear()
-            print(f"{HEADER}options >")
-            print(f"{MENU}[a] change TMDB Access Token")
-            print(f"{MENU}[q] back")
+            print(f"{HEADER}options > ")
+            print(menu(("a", "change TMDB Access Token")))
+            print(menu(("q", "back")))
             usr = take_input("$ ", choices=['a', 'q'])
             match usr:
                 case 'q':
@@ -331,10 +359,10 @@ class App:
             clear()
             show_banner()
             print(f"{HEADER}Welcome to Movielist!")
-            print(f"{MENU}[s] to search")
-            print(f"{MENU}[l] to see your library")
-            print(f"{MENU}[o] options")
-            print(f"{MENU}[q] to quit")
+            print(menu(("s", "search")))
+            print(menu(("l", "library")))
+            print(menu(("o", "options")))
+            print(menu(("q", "quit")))
             usr = take_input("$ ", choices=['s', 'l','o', 'q'])
             match usr:
                 case 'q':

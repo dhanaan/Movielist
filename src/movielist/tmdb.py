@@ -1,5 +1,6 @@
 import requests
 
+
 class TMDBAPIError(Exception):
     """Raised when the TMDB API returns an error response"""
     def __init__(self, message: str, status_code: int = None, response_data: dict = None):
@@ -14,8 +15,7 @@ class TMDBConnectionError(TMDBAPIError):
     NOTE: subclass of TMDBAPIError, always except this BEFORE TMDBAPIError,
     or the parent will silently swallow it.
     """ 
-    pass
-
+    
 class TMDBClient:
     def __init__(self, access_token: str):
         self.base_url = "https://api.themoviedb.org/3"

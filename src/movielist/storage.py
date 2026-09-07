@@ -11,7 +11,7 @@ def write(path, data):
     with open(APP_DIR/path, 'w') as file:
         json.dump(data, file)
 
-def read(path):
+def read(path: str) -> str:
     try:
         with open(APP_DIR/path, 'r') as file:
             return json.load(file)

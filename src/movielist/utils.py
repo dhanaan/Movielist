@@ -1,9 +1,17 @@
 import subprocess
 import os
-from colorama import init, Fore
+from colorama import init, Fore, Style
 
 init(autoreset=True)
+
 ERROR = Fore.RED
+HEADER = Fore.CYAN + Style.BRIGHT
+MENU = Fore.MAGENTA
+SUCCESS = Fore.GREEN
+WARN = Fore.YELLOW
+LINK = Fore.BLUE
+DIM = Style.DIM
+RESET = Style.RESET_ALL
 
 def show_banner():
     print(r"""
@@ -14,7 +22,7 @@ def show_banner():
     """)
 
 def clear():
-    subprocess.run("cls" if os.name == "nt" else "clear", shell=True)
+    subprocess.run("cls" if os.name == "nt" else "clear", shell=True, check=False)
 
 # def load_genres(json_path: str, Client: TMDBClient) -> dict:
 #     result = storage.read(json_path)
@@ -35,7 +43,7 @@ def clear():
 #     else:
 #         return result
 
-def format_rating(rating: int) -> str:
+def format_rating(rating: float) -> str:
     rounded = round(rating, 1)
     if rounded == int(rounded):
         return str(int(rounded))
@@ -57,7 +65,7 @@ def looks_like_jwt(token: str) -> bool:
     pasted v3 API key instead of a v4 token.
     """
     token = str(token).strip()
-    if not token or token.count(".") != 2 or len(token) < 100:
+    if (not token) or (token.count(".") != 2) or (len(token) < 100):
         return False
     else:
         return True
@@ -74,3 +82,9 @@ def format_runtime(min: int, convert_below_hour = True):
 
 def link_it(text, url):
     return f"\033]8;;{url}\033\\{text}\033]8;;\033\\"
+
+def menu(*items):
+    parts = []
+    for key, label in items:
+        parts.append(f"{MENU}[{RESET}{key}{MENU}] {RESET}{label if label else ""}")
+    return " | ".join(parts)
