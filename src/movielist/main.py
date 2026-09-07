@@ -181,19 +181,16 @@ class App:
         clear()
         print(f"{HEADER}{"movies" if query_type == 'm' else "tv-series"} search > ")
         query = take_input("$ ")
-        page = 1
         result_cache = {}
-        show_index = 0
+        show_page = 0
         cache_result = []
-        next_page = True
+        raw_cache = []
         next_api_page = True
         api_page = 1
-        
+
         while True:
             clear()
             print(f'{HEADER}search > {query}')
-            #time_start = time.perf_counter()
-            # result = json from {"0":{"a":"b"}} that data means whole data of an API page
             if result_cache.get(api_page) is None:
                 while result_cache.get(api_page) is None:
                     try:
@@ -209,54 +206,46 @@ class App:
                     print(f"{HEADER}search > {query}")
             else:
                 result = result_cache.get(api_page)
-                
+
             total_api_page = result["total_pages"]
+            total_results = result["total_results"]
             full_result = result["results"]
-            
+
             if next_api_page:
-                for i, res in enumerate(full_result, len(cache_result)):
-                    cache_result.append(f'{i}. {res['title'] if query_type == 'm' else res['name']} ({res['release_date'][:4] if query_type == 'm' else res['first_air_date']}) [{WARN}★ {format_rating(res['vote_average'])}/10{Style.RESET_ALL}]')
+                for i, res in enumerate(full_result, len(cache_result) + 1):
+                    date = res.get('release_date') if query_type == 'm' else res.get('first_air_date')
+                    year = date[:4] if date else '????'
+                    cache_result.append(f'{i}. {res['title'] if query_type == 'm' else res['name']} ({year}) [{WARN}★ {format_rating(res['vote_average'])}/10{Style.RESET_ALL}]')
+                    raw_cache.append(res)
                     next_api_page = False
-                    
-            if (show_index + 10) > len(cache_result) and api_page < total_api_page:
+
+            if (show_page + 1) * 10 > len(cache_result) and api_page < total_api_page:
                 next_api_page = True
                 api_page += 1
                 continue
-                
 
-            if next_page is True:
-                next_page = None
-                for i in range(10):
-                    if show_index < len(cache_result):
-                        show_index += 1
-                    else:
-                        break
-                    print(cache_result[show_index])
+            page_items = cache_result[show_page * 10 : show_page * 10 + 10]
+            for line in page_items:
+                print(line)
 
-            elif next_page is False:
-                next_page = None
-                for i in range(10):
-                    if show_index > 0:
-                        show_index -= 1
-                    else:
-                        break
-                    print(cache_result[show_index])
-
-            #time_end = time.perf_counter()
+            number_choices = [str(n) for n in range(show_page * 10 + 1, show_page * 10 + len(page_items) + 1)]
 
             print()
-            #print(f'{DIM}[page {page}/{total_page}] [{result_len} results in {time_end - time_start:.3f}]')
+            local_total_pages = -(-total_results // 10)   # ceil division, no import needed
+            print(f'{DIM}[page {show_page + 1}/{local_total_pages}]')
             print(menu(("q", "back"), ("n", "next"), ("p", "previous"), ("number", "select")))
-            usr = take_input("$ ", choices=['q', 'n', 'p'])
+            usr = take_input("$ ", choices=['q', 'n', 'p'] + number_choices)
             match usr:
                 case 'q':
                     return
                 case 'n':
-                    next_page = True
+                    if (show_page + 1) * 10 < len(cache_result) or api_page < total_api_page:
+                        show_page += 1
                 case 'p':
-                    next_page = False
+                    if show_page > 0:
+                        show_page -= 1
                 case _:
-                    item = full_result[int(usr) - 1]
+                    item = raw_cache[int(usr) - 1]
                     item_id = item.get("id")
                     item_a_movie = item.get('title') is not None
                     self.show_details(item_id, item_a_movie)
@@ -264,21 +253,40 @@ class App:
     def see_library(self):
         clear()
         self.library.read()
+        page = 0
+        max_page = 0
+
+        if not self.library.library_data:
+            print(f"{WARN}Nothing in your library..")
+            self.enter_to_continue()
+            return
+
         while True:
+            clear()
             print(f"{HEADER}library > ")
-            if not self.library.library_data:
-                print(f"{WARN}Nothing in your library..")
-            else:
-                for i, item in enumerate(self.library.library_data, 1):
-                    is_a_movie = item.get('title') is not None
-                    watched = item.get('is_watched', False)
-                    print(f'{i}. {item['title'] if is_a_movie else item['name']} ({item['release_date'][:4] if is_a_movie else item['first_air_date']}) [{WARN}★ {format_rating(item['vote_average'])}/10{Style.RESET_ALL}] {SUCCESS + "👁" if watched else ""}')
+
+            cache = []
+            for i, item in enumerate(self.library.library_data, 1):
+                is_a_movie = item.get('title') is not None
+                watched = item.get('is_watched', False)
+                cache.append(f'{i}. {item['title'] if is_a_movie else item['name']} ({item['release_date'][:4] if is_a_movie else item['first_air_date']}) [{WARN}★ {format_rating(item['vote_average'])}/10{Style.RESET_ALL}] {SUCCESS + "👁" if watched else ""}')
+
+            max_page = -(-len(cache) // 10) - 1   # ceil division, then convert to 0-indexed
             
-            print(menu(("q", "back"), ("number", "select")))
-            usr = take_input("$ ", choices=['q'] + list(map(str, range(1, len(self.library) + 1))))
+            page_items = cache[page * 10 : page * 10 + 10]
+            for line in page_items:
+                print(line)
+            print(f'{DIM}[page {page + 1}/{max_page + 1}]')
+            print(menu(("q", "back"), ("n", "next"), ("p", "previous"), ("number", "select")))
+            number_choices = [str(n) for n in range(page * 10 + 1, page * 10 + len(page_items) + 1)]
+            usr = take_input("$ ", choices=['q', 'n', 'p'] + number_choices)
             match usr:
                 case 'q':
                     return
+                case 'n':
+                    page = min(page + 1, max_page)
+                case 'p':
+                    page = max(page - 1, 0)
                 case _:
                     item = self.library.library_data[int(usr) - 1]
                     item_id = item.get("id")
